@@ -1,4 +1,4 @@
-package client;
+package server;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,6 +54,10 @@ public class ClientHandler implements Runnable {
     public void broadcastMessage(String messageToSend) {
         for (ClientHandler clientHandler : clients) {
             try {
+                if (clientHandler.clientUsername.equals(clientUsername)
+                        && messageToSend.equals(clientUsername + ": EXIT")) {
+                    closeEverything(clientSocket, in, out);
+                }
                 if (!clientHandler.clientUsername.equals(clientUsername)) {
                     clientHandler.out.write(messageToSend);
                     clientHandler.out.newLine();
@@ -68,6 +72,7 @@ public class ClientHandler implements Runnable {
     // Remove this client
     public void removeClientHandler() {
         clients.remove(this);
+        System.out.println(clientUsername + " disconnected.");
         broadcastMessage("Server: " + clientUsername + " has left the chat!");
     }
 
