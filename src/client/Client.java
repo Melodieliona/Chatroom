@@ -15,12 +15,16 @@ public class Client {
     private BufferedWriter out;
     private Consumer<String> onMsgReceived;
 
-    public Client(String serverAdress, int serverPort, Consumer<String> onMsgReceived) {
+    public Client(String serverAdress, int serverPort, Consumer<String> onMsgReceived, String username) {
         try {
             this.socket = new Socket(serverAdress, serverPort);
             this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.onMsgReceived = onMsgReceived;
+
+            out.write(username);
+            out.newLine();
+            out.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,23 +32,8 @@ public class Client {
         }
     }
 
-    /*
-     * public void sendMessage(String msg) throws IOException {
-     * out.write(msg);
-     * }
-     */
-
     public void sendMessage(String msgToSend) {
         try {
-            // out.write(username);
-            // out.newLine();
-            // out.flush();
-
-            // Scanner scanner = new Scanner(System.in);
-            // while (socket.isConnected()) {
-            // String msgToSend = scanner.nextLine();
-            // out.write(username + ": " + msgToSend);
-            // out.newLine();
             out.write(msgToSend);
             out.newLine();
             out.flush();
@@ -102,18 +91,4 @@ public class Client {
         }).start();
 
     }
-
-    public static void main(String[] args) throws IOException {
-        /*
-         * Scanner scanner = new Scanner(System.in);
-         * System.out.println("Enter username to enter chat: ");
-         * String username = scanner.nextLine();
-         * Socket socket = new Socket("localhost", 1234);
-         * Client client = new Client(socket, username);
-         * client.listenForMsg();
-         * client.sendMessage();
-         */
-
-    }
-
 }

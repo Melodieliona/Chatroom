@@ -15,6 +15,7 @@ public class ChatGUI extends JFrame {
     private JTextArea messageArea;
     private JTextField textField;
     private Client client;
+    private String username;
 
     public ChatGUI() {
         super("Chat");
@@ -25,10 +26,9 @@ public class ChatGUI extends JFrame {
         messageArea.setEditable(false);
         add(new JScrollPane(messageArea), BorderLayout.CENTER);
 
-        String username = JOptionPane.showInputDialog(this, "Enter your username: ", "Name Entry",
+        this.username = JOptionPane.showInputDialog(this, "Enter your username: ", "Name Entry",
                 JOptionPane.PLAIN_MESSAGE);
-        this.setTitle("Chat " + username);
-
+        this.setTitle(username + " Chat");
         textField = new JTextField();
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -40,7 +40,7 @@ public class ChatGUI extends JFrame {
         });
         add(textField, BorderLayout.SOUTH);
 
-        this.client = new Client("localhost", 1234, this::onMessageReceived);
+        this.client = new Client("localhost", 1234, this::onMessageReceived, username);
         client.listenForMsg();
 
     }
